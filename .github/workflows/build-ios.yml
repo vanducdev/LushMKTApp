@@ -33,7 +33,7 @@ jobs:
           if [ ! -d "ios" ]; then
             flutter create . --platforms=ios
           fi
-          flutter pub run flutter_launcher_icons
+          flutter pub run flutter_launcher_icons:main
 
       - name: Install CocoaPods
         run: |

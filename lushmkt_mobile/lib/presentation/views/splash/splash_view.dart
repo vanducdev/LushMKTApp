@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../auth/login_view.dart';
+import '../home/home_view.dart';
+import '../../controllers/auth_controller.dart';
 
 class SplashView extends StatefulWidget {
   const SplashView({super.key});
@@ -13,6 +15,7 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  final AuthController _authController = Get.put(AuthController());
 
   @override
   void initState() {
@@ -32,9 +35,13 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
 
     _controller.forward();
 
-    // Navigate to Login after 3 seconds
+    // Auto Login Check: Redirect straight to HomeView if token exists, else LoginView
     Future.delayed(const Duration(seconds: 3), () {
-      Get.offAll(() => const LoginView());
+      if (_authController.userToken.value.isNotEmpty) {
+        Get.offAll(() => const HomeView());
+      } else {
+        Get.offAll(() => const LoginView());
+      }
     });
   }
 
@@ -49,22 +56,14 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
     return Scaffold(
       body: Stack(
         children: [
-          // Cyber Space Background Gradients
+          // Clean Dark Professional Background
           Container(
             decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  Color(0xFF07090E),
-                  Color(0xFF0D111A),
-                  Color(0xFF150921),
-                ],
-              ),
+              color: Color(0xFF0D0F14),
             ),
           ),
           
-          // Subtle neon light effect
+          // Clean Professional Gradient background element
           Positioned(
             top: -100,
             left: -100,
@@ -75,26 +74,8 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: const Color(0xFF00E5FF).withOpacity(0.15),
+                    color: const Color(0xFF00E5FF).withOpacity(0.08),
                     blurRadius: 100,
-                  ),
-                ],
-              ),
-            ),
-          ),
-          
-          Positioned(
-            bottom: -150,
-            right: -100,
-            child: Container(
-              width: 400,
-              height: 400,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                boxShadow: [
-                  BoxShadow(
-                    color: const Color(0xFF7000FF).withOpacity(0.15),
-                    blurRadius: 120,
                   ),
                 ],
               ),
@@ -109,59 +90,48 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // Glow logo container
+                    // Clean Logo container (Logo can also be placed here)
                     Container(
-                      padding: const EdgeInsets.all(24),
+                      padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white.withOpacity(0.03),
+                        color: Colors.white.withOpacity(0.02),
                         border: Border.all(
-                          color: const Color(0xFF00E5FF).withOpacity(0.3),
-                          width: 2,
+                          color: const Color(0xFF00E5FF).withOpacity(0.15),
+                          width: 1.5,
                         ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xFF00E5FF).withOpacity(0.2),
-                            blurRadius: 30,
-                            spreadRadius: 2,
-                          ),
-                        ],
                       ),
                       child: const Icon(
-                        Icons.rocket_launch,
-                        size: 80,
+                        Icons.rocket_launch_rounded,
+                        size: 70,
                         color: Color(0xFF00E5FF),
                       ),
                     ),
-                    const SizedBox(height: 30),
-                    // App Name with Cyber Gradient
-                    ShaderMask(
-                      shaderCallback: (bounds) => const LinearGradient(
-                        colors: [Color(0xFF00E5FF), Color(0xFF7000FF)],
-                      ).createShader(bounds),
-                      child: const Text(
-                        'LushMKT',
-                        style: TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 4,
-                          color: Colors.white,
-                        ),
+                    const SizedBox(height: 24),
+                    // App Name
+                    const Text(
+                      'LushMKT',
+                      style: TextStyle(
+                        fontSize: 40,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 3,
+                        color: Colors.white,
                       ),
                     ),
+                    const SizedBox(height: 6),
                     const Text(
                       'THE PREMIER MMO MARKETPLACE',
                       style: TextStyle(
-                        fontSize: 12,
+                        fontSize: 11,
                         fontWeight: FontWeight.w400,
                         letterSpacing: 2,
                         color: Colors.grey,
                       ),
                     ),
                     const SizedBox(height: 50),
-                    // Premium custom glowing linear loading indicator
+                    // Clean progress indicator
                     SizedBox(
-                      width: 180,
+                      width: 160,
                       child: Column(
                         children: [
                           ClipRRect(
@@ -169,16 +139,16 @@ class _SplashViewState extends State<SplashView> with SingleTickerProviderStateM
                             child: const LinearProgressIndicator(
                               color: Color(0xFF00E5FF),
                               backgroundColor: Color(0xFF161B22),
-                              minHeight: 4,
+                              minHeight: 3,
                             ),
                           ),
-                          const SizedBox(height: 10),
+                          const SizedBox(height: 12),
                           const Text(
-                            'CONNECTING SECURE NODE...',
+                            'KẾT NỐI HỆ THỐNG AN TOÀN...',
                             style: TextStyle(
                               fontSize: 9,
                               letterSpacing: 1,
-                              color: Color(0xFF00E5FF),
+                              color: Colors.grey,
                             ),
                           ),
                         ],

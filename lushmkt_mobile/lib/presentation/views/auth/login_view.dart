@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../home/home_view.dart';
 import 'register_view.dart';
+import 'forgot_password_view.dart';
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -124,7 +125,7 @@ class _LoginViewState extends State<LoginView> {
                     Align(
                       alignment: Alignment.centerRight,
                       child: TextButton(
-                        onPressed: () {},
+                        onPressed: () => Get.to(() => const ForgotPasswordView()),
                         child: const Text('Quên mật khẩu?', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 12)),
                       ),
                     ),

@@ -1,4 +1,4 @@
-name: Build iOS IPA & Android APK
+name: Build iOS IPA Only
 
 on:
   push:
@@ -9,18 +9,12 @@ on:
 
 jobs:
   build:
-    name: Build & Release Artifacts
+    name: Build & Release iOS IPA
     runs-on: macos-latest
 
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-
-    - name: Set up Java
-      uses: actions/setup-java@v4
-      with:
-        distribution: 'zulu'
-        java-version: '17'
 
     - name: Set up Flutter
       uses: subosito/flutter-action@v2
@@ -28,16 +22,11 @@ jobs:
         flutter-version: '3.19.x'
         channel: 'stable'
 
-    - name: Install dependencies
+    - name: Install dependencies & Generate iOS project
       run: |
         cd lushmkt_mobile
-        flutter create --org com.lushmkt --project-name lushmkt_mobile .
+        flutter create --org com.lushmkt --project-name lushmkt_mobile --platforms ios .
         flutter pub get
-
-    - name: Build Android APK (For fast testing)
-      run: |
-        cd lushmkt_mobile
-        flutter build apk --release
 
     - name: Build iOS App (Ad-Hoc/Simulator/Sideload Package)
       run: |
@@ -56,9 +45,3 @@ jobs:
       with:
         name: LushMKT-iOS-IPA
         path: lushmkt_mobile/build/LushMKT.ipa
-
-    - name: Upload Android APK Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: LushMKT-Android-APK
-        path: lushmkt_mobile/build/app/outputs/flutter-apk/app-release.apk

@@ -1,8 +1,8 @@
 class UserModel {
   final int id;
-  final String name;
+  String name;
   final String email;
-  final double balance;
+  double balance;
   final String role;
   final String? apiKey;
   final String? avatar;

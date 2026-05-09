@@ -136,7 +136,7 @@ class _ProductPurchaseViewState extends State<ProductPurchaseView> {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                                 const SizedBox(height: 12),
-                                Divider(color: isDark ? Colors.white10 : Colors.black10),
+                                Divider(color: isDark ? Colors.white10 : Colors.black12),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                   children: [

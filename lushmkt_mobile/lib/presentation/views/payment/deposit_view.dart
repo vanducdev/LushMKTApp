@@ -199,11 +199,20 @@ class _DepositViewState extends State<DepositView> {
                       Container(
                         padding: const EdgeInsets.all(10),
                         decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(16)),
-                        child: Image.network(
-                          'https://img.vietqr.io/image/MB-0359261551-compact2.png?amount=${_activeOrderAmount.toInt()}&addInfo=$_activeTransferNote',
+                        child: Image.asset(
+                          'image/qr-bank.jpg',
                           height: 180,
                           width: 180,
                           fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            // Dynamic VietQR fallback if asset is missing or has issues
+                            return Image.network(
+                              'https://img.vietqr.io/image/MB-0359261551-compact2.png?amount=${_activeOrderAmount.toInt()}&addInfo=$_activeTransferNote',
+                              height: 180,
+                              width: 180,
+                              fit: BoxFit.cover,
+                            );
+                          },
                         ),
                       ),
                       const SizedBox(height: 20),

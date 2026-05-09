@@ -21,9 +21,6 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Check Flutter Version
-        run: flutter --version
-
       - name: Install Flutter Dependencies
         run: |
           cd lushmkt_mobile
@@ -45,17 +42,30 @@ jobs:
           rm -f Podfile.lock
           pod install --repo-update
 
-      - name: Build iOS Runner No Codesign
+      - name: Build iOS No Codesign
         run: |
           cd lushmkt_mobile
-          flutter build ios --release --no-codesign --verbose
 
-      - name: Package Sideloadable IPA
+          flutter build ios --release --no-codesign || true
+
+          xcodebuild \
+            -workspace ios/Runner.xcworkspace \
+            -scheme Runner \
+            -configuration Release \
+            -sdk iphoneos \
+            -derivedDataPath build/ios \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            DEVELOPMENT_TEAM="" \
+            build
+
+      - name: Package IPA
         run: |
           cd lushmkt_mobile
           rm -rf Payload
           mkdir -p Payload
-          cp -R build/ios/iphoneos/Runner.app Payload/
+          cp -R build/ios/Build/Products/Release-iphoneos/Runner.app Payload/ || cp -R build/ios/iphoneos/Runner.app Payload/
           zip -qry LushMKT-Sideload.ipa Payload
 
       - name: Upload IPA Artifact

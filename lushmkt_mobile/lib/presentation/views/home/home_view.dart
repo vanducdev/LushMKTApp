@@ -82,8 +82,12 @@ class _HomeViewState extends State<HomeView> {
             height: 250,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-              color: const Color(0xFF00E5FF).withOpacity(0.12),
-              blurRadius: 90,
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0xFF00E5FF).withOpacity(0.12),
+                  blurRadius: 90,
+                ),
+              ],
             ),
           ),
         ),

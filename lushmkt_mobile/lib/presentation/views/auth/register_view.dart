@@ -30,8 +30,12 @@ class _RegisterViewState extends State<RegisterView> {
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF7000FF).withOpacity(0.12),
-                blurRadius: 100,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF7000FF).withOpacity(0.12),
+                    blurRadius: 100,
+                  ),
+                ],
               ),
             ),
           ),
@@ -43,8 +47,12 @@ class _RegisterViewState extends State<RegisterView> {
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF00E5FF).withOpacity(0.12),
-                blurRadius: 100,
+                boxShadow: [
+                  BoxShadow(
+                    color: const Color(0xFF00E5FF).withOpacity(0.12),
+                    blurRadius: 100,
+                  ),
+                ],
               ),
             ),
           ),

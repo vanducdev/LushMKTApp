@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../../data/models/product_model.dart';
+import 'package:lushmkt_mobile/data/models/product_model.dart';
 import '../../controllers/cart_controller.dart';
 
 class ProductPurchaseView extends StatefulWidget {

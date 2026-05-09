@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../../data/models/transaction_model.dart';
 import '../../data/repositories/payment_repository.dart';
@@ -10,7 +11,7 @@ class PaymentController extends GetxController {
 
   // VietQR Transfer Details
   var bankName = 'MB Bank (Quân Đội)'.obs;
-  var accountNumber = '098123456789'.obs;
+  var accountNumber = '0359261551'.obs;
   var accountHolder = 'NGUYEN VAN DUC'.obs;
   var qrAmount = 50000.0.obs;
   var transferNote = 'LUSH 781029'.obs;

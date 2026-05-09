@@ -1,47 +1,50 @@
-name: Build iOS IPA Only
+name: Build iOS IPA
 
 on:
-  push:
-    branches: [ main, master ]
-  pull_request:
-    branches: [ main, master ]
   workflow_dispatch:
 
 jobs:
-  build:
-    name: Build & Release iOS IPA
+  build-ios:
     runs-on: macos-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Set up Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.19.x'
-        channel: 'stable'
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.24.0'
 
-    - name: Install dependencies & Generate iOS project
-      run: |
-        cd lushmkt_mobile
-        flutter create --org com.lushmkt --project-name lushmkt_mobile --platforms ios .
-        flutter pub get
+      - name: Flutter Pub Get
+        run: |
+          cd lushmkt_mobile
+          flutter pub get
 
-    - name: Build iOS App (Ad-Hoc/Simulator/Sideload Package)
-      run: |
-        cd lushmkt_mobile
-        # Build without signing (ideal for Sideloading via Sideloadly / AltStore)
-        flutter build ios --release --no-codesign
-        
-        # Package the .app into an installable .ipa
-        mkdir -p Payload
-        mv build/ios/iphoneos/Runner.app Payload/
-        zip -r LushMKT.ipa Payload
-        mv LushMKT.ipa build/
+      - name: Enable iOS
+        run: |
+          cd lushmkt_mobile
+          flutter config --enable-ios
 
-    - name: Upload iOS IPA Artifact
-      uses: actions/upload-artifact@v4
-      with:
-        name: LushMKT-iOS-IPA
-        path: lushmkt_mobile/build/LushMKT.ipa
+      - name: Install CocoaPods
+        run: |
+          cd lushmkt_mobile/ios
+          pod install
+
+      - name: Build iOS No Codesign
+        run: |
+          cd lushmkt_mobile
+          flutter build ios --release --no-codesign
+
+      - name: Create IPA
+        run: |
+          cd lushmkt_mobile
+          mkdir Payload
+          cp -r build/ios/iphoneos/Runner.app Payload
+          zip -r LushMKT.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: LushMKT-IPA
+          path: lushmkt_mobile/LushMKT.ipa

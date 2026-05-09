@@ -51,13 +51,13 @@ jobs:
         mv LushMKT.ipa build/
 
     - name: Upload iOS IPA Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: LushMKT-iOS-IPA
         path: lushmkt_mobile/build/LushMKT.ipa
 
     - name: Upload Android APK Artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: LushMKT-Android-APK
         path: lushmkt_mobile/build/app/outputs/flutter-apk/app-release.apk

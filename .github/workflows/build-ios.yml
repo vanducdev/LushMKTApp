@@ -8,7 +8,7 @@ on:
 
 jobs:
   build-ios:
-    runs-on: macos-latest
+    runs-on: macos-14
 
     steps:
       - name: Checkout Repository
@@ -17,39 +17,48 @@ jobs:
       - name: Setup Flutter SDK
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.24.0'
+          flutter-version: "3.24.0"
+          channel: stable
           cache: true
+
+      - name: Check Flutter Version
+        run: flutter --version
 
       - name: Install Flutter Dependencies
         run: |
           cd lushmkt_mobile
+          flutter clean
           flutter pub get
 
-      - name: Create iOS folder scaffolding if missing
+      - name: Create iOS Folder If Missing
         run: |
           cd lushmkt_mobile
           if [ ! -d "ios" ]; then
             flutter create . --platforms=ios
           fi
 
-      - name: CocoaPods Install
+      - name: Install CocoaPods
         run: |
           cd lushmkt_mobile/ios
-          pod install
+          pod deintegrate || true
+          rm -rf Pods
+          rm -f Podfile.lock
+          pod install --repo-update
 
-      - name: Build iOS Runner (No Codesign)
+      - name: Build iOS Runner No Codesign
         run: |
           cd lushmkt_mobile
-          flutter build ios --release --no-codesign
+          flutter build ios --release --no-codesign --verbose
 
-      - name: Package Sideloadable IPA (Payload Structure)
+      - name: Package Sideloadable IPA
         run: |
           cd lushmkt_mobile
+          rm -rf Payload
           mkdir -p Payload
-          cp -r build/ios/iphoneos/Runner.app Payload/
-          zip -r LushMKT-Sideload.ipa Payload
+          cp -R build/ios/iphoneos/Runner.app Payload/
+          zip -qry LushMKT-Sideload.ipa Payload
 
-      - name: Export LushMKT iOS IPA Artifact
+      - name: Upload IPA Artifact
         uses: actions/upload-artifact@v4
         with:
           name: LushMKT-iOS-IPA-Sideload

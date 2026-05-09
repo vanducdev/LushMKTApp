@@ -31,6 +31,7 @@ jobs:
     - name: Install dependencies
       run: |
         cd lushmkt_mobile
+        flutter create --org com.lushmkt --project-name lushmkt_mobile .
         flutter pub get
 
     - name: Build Android APK (For fast testing)

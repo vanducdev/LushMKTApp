@@ -254,28 +254,24 @@ class _LoginViewState extends State<LoginView> {
     );
   }
 
-  // Build Logo Header with exact custom image file and professional fallback
+  // Build Logo Header with exact custom image asset
   Widget _buildLogoHeader() {
-    const String imagePath = 'c:\\Users\\ducva\\Downloads\\LushMKT\\lushmkt_mobile\\image\\isometric-b2b-illustration.png';
-    final file = File(imagePath);
-
-    if (file.existsSync()) {
-      return Image.file(
-        file,
-        height: 160,
-        fit: BoxFit.contain,
-      );
-    }
-
-    // High-end fallback if the custom logo file isn't directly loaded
-    return Container(
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Colors.white.withOpacity(0.02),
-        border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.12)),
-      ),
-      child: const Icon(Icons.rocket_launch_rounded, size: 60, color: Color(0xFF00E5FF)),
+    return Image.asset(
+      'image/isometric-b2b-illustration.png',
+      height: 160,
+      fit: BoxFit.contain,
+      errorBuilder: (context, error, stackTrace) {
+        // High-end fallback if the asset fails to load
+        return Container(
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: Colors.white.withOpacity(0.02),
+            border: Border.all(color: const Color(0xFF00E5FF).withOpacity(0.12)),
+          ),
+          child: const Icon(Icons.rocket_launch_rounded, size: 60, color: Color(0xFF00E5FF)),
+        );
+      },
     );
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import '../auth/login_view.dart';
 import 'tickets_view.dart';
+import '../../controllers/auth_controller.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({super.key});
@@ -12,13 +13,24 @@ class ProfileView extends StatefulWidget {
 }
 
 class _ProfileViewState extends State<ProfileView> {
-  final String _apiKey = "lush_mkt_live_key_918237198a9d8213bc89a";
+  final AuthController _authController = Get.put(AuthController());
+
+  void _copyToClipboard(String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    Get.snackbar(
+      'Đã Sao Chép',
+      'Đã sao chép khóa API MMO thành công.',
+      snackPosition: SnackPosition.BOTTOM,
+      backgroundColor: const Color(0xFF161B22),
+      colorText: Colors.white,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('TRANG CÁ NHÂN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16, letterSpacing: 1)),
+        title: const Text('TRANG CÁ NHÂN', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14, letterSpacing: 1)),
         backgroundColor: const Color(0xFF0D0F14),
         elevation: 0,
         centerTitle: true,
@@ -31,145 +43,169 @@ class _ProfileViewState extends State<ProfileView> {
             child: SingleChildScrollView(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(20.0),
-              child: Column(
-                children: [
-                  // 1. Glowing Avatar & Level Header
-                  Center(
-                    child: Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(3),
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(color: const Color(0xFF00E5FF), width: 2),
-                            boxShadow: [
-                              BoxShadow(
-                                color: const Color(0xFF00E5FF).withOpacity(0.2),
-                                blurRadius: 20,
-                              ),
-                            ],
-                          ),
-                          child: const CircleAvatar(
-                            radius: 45,
-                            backgroundColor: Color(0xFF161B22),
-                            child: Text(
-                              'L',
-                              style: TextStyle(color: Color(0xFF00E5FF), fontSize: 32, fontWeight: FontWeight.bold),
+              child: Obx(() {
+                final user = _authController.currentUser.value;
+                final userName = user?.name ?? 'Lush User';
+                final userEmail = user?.email ?? 'user@lushmkt.com';
+                final userApiKey = user?.apiKey ?? 'lush_mkt_live_key_918237198a9d8213bc89a';
+                final balance = user?.balance ?? 2450000.0;
+
+                return Column(
+                  children: [
+                    // 1. Glowing Avatar & Level Header
+                    Center(
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: const Color(0xFF00E5FF), width: 2),
+                              boxShadow: [
+                                BoxShadow(color: const Color(0xFF00E5FF).withOpacity(0.2), blurRadius: 20),
+                              ],
+                            ),
+                            child: const CircleAvatar(
+                              radius: 40,
+                              backgroundColor: Color(0xFF161B22),
+                              child: Text('L', style: TextStyle(color: Color(0xFF00E5FF), fontSize: 28, fontWeight: FontWeight.bold)),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'LushDeveloper 🚀',
-                          style: TextStyle(color: Colors.white, fontSize: 20, fontWeight: FontWeight.bold),
-                        ),
-                        const SizedBox(height: 6),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                          decoration: BoxDecoration(
-                            gradient: const LinearGradient(
-                              colors: [Color(0xFF00E5FF), Color(0xFF7000FF)],
+                          const SizedBox(height: 16),
+                          Text(
+                            userName,
+                            style: const TextStyle(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            userEmail,
+                            style: const TextStyle(color: Colors.grey, fontSize: 12),
+                          ),
+                          const SizedBox(height: 12),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF00E5FF).withOpacity(0.12),
+                              borderRadius: BorderRadius.circular(20),
                             ),
-                            borderRadius: BorderRadius.circular(20),
-                          ),
-                          child: const Text(
-                            'VIP LEVEL 3',
-                            style: TextStyle(color: Colors.white, fontSize: 10, fontWeight: FontWeight.bold, letterSpacing: 1),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 30),
-
-                  // 2. Personal API Key Box (High-End MMO Automation requirement)
-                  Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'KHÓA TÍCH HỢP API CÁ NHÂN'.toUpperCase(),
-                      style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 11, color: Color(0xFF00E5FF), letterSpacing: 1),
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF161B22),
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: Colors.white.withOpacity(0.04)),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            _apiKey,
-                            style: const TextStyle(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.copy, color: Color(0xFF00E5FF), size: 18),
-                          onPressed: () {
-                            Clipboard.setData(ClipboardData(text: _apiKey));
-                            Get.snackbar(
-                              'Đã sao chép',
-                              'Đã sao chép khóa API cá nhân của bạn!',
-                              snackPosition: SnackPosition.BOTTOM,
-                              backgroundColor: const Color(0xFF161B22),
-                              colorText: Colors.white,
-                            );
-                          },
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-
-                  // 3. User spendings & transactions summary
-                  Row(
-                    children: [
-                      _buildSpendingCard('TỔNG CHI TIÊU', '12,450,000đ', Icons.payment, Colors.green),
-                      const SizedBox(width: 16),
-                      _buildSpendingCard('ĐƠN ĐÃ HOÀN THÀNH', '142 Đơn', Icons.assignment_turned_in, Colors.blue),
-                    ],
-                  ),
-                  const SizedBox(height: 30),
-
-                  // 4. Action List Tiles
-                  _buildProfileTile(Icons.history, 'Lịch sử giao dịch & Nạp tiền', () {}),
-                  _buildProfileTile(Icons.support_agent, 'Gửi yêu cầu hỗ trợ (Ticket)', () => Get.to(() => const TicketsView())),
-                  _buildProfileTile(Icons.security, 'Thay đổi mật khẩu', () {}),
-                  _buildProfileTile(Icons.info_outline, 'Điều khoản & Chính sách', () {}),
-                  
-                  const SizedBox(height: 30),
-
-                  // 5. Modern Red Logout Button
-                  Container(
-                    width: double.infinity,
-                    height: 52,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(color: const Color(0xFFFF2D55).withOpacity(0.5)),
-                    ),
-                    child: ElevatedButton.icon(
-                      onPressed: () {
-                        Get.offAll(() => const LoginView());
-                      },
-                      icon: const Icon(Icons.logout, color: Color(0xFFFF2D55), size: 18),
-                      label: const Text(
-                        'ĐANG XUẤT TÀI KHOẢN',
-                        style: TextStyle(color: Color(0xFFFF2D55), fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1),
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            child: const Text(
+                              'VIP GOLD LEVEL 3',
+                              style: TextStyle(color: Color(0xFF00E5FF), fontSize: 9, fontWeight: FontWeight.bold, letterSpacing: 0.5),
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
+                    const SizedBox(height: 30),
+
+                    // 2. Spending Stats Card
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF161B22),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withOpacity(0.04)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          _buildStatItem('VÍ TIỀN', '${balance.toInt().toString().replaceAllMapped(RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'), (Match m) => '${m[1]}.')}đ'),
+                          Container(height: 30, width: 1, color: Colors.white10),
+                          _buildStatItem('ĐÃ TIÊU', '12.450.000đ'),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 3. API Key Card for MMO Automation
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: const Text('KHÓA KẾT NỐI API TOOL MMO', style: TextStyle(color: Colors.grey, fontSize: 11, fontWeight: FontWeight.bold, letterSpacing: 1)),
+                    ),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF161B22),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withOpacity(0.04)),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                const Text('PERSONAL API KEY', style: TextStyle(color: Colors.grey, fontSize: 9, fontWeight: FontWeight.bold)),
+                                const SizedBox(height: 4),
+                                Text(
+                                  userApiKey,
+                                  style: const TextStyle(color: Colors.white70, fontSize: 11, fontFamily: 'monospace'),
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                          ),
+                          IconButton(
+                            icon: const Icon(Icons.copy_rounded, color: Color(0xFF00E5FF), size: 20),
+                            onPressed: () => _copyToClipboard(userApiKey),
+                          )
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 4. Settings List Options
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF161B22),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: Colors.white.withOpacity(0.04)),
+                      ),
+                      child: Column(
+                        children: [
+                          _buildListTile(Icons.history_edu, 'Lịch sử mua tài nguyên', () {}),
+                          const Divider(color: Colors.white10, height: 1),
+                          _buildListTile(Icons.headset_mic_outlined, 'Vế hỗ trợ kỹ thuật (Tickets)', () => Get.to(() => const TicketsView())),
+                          const Divider(color: Colors.white10, height: 1),
+                          _buildListTile(Icons.security_rounded, 'Bảo mật & Đổi mật khẩu', () {}),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(height: 24),
+
+                    // 5. Logout Button
+                    SizedBox(
+                      width: double.infinity,
+                      height: 52,
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          await _authController.logout();
+                          Get.offAll(() => const LoginView());
+                          Get.snackbar(
+                            'Đã Đăng Xuất',
+                            'Đã đăng xuất khỏi tài khoản LushMKT thành công.',
+                            snackPosition: SnackPosition.BOTTOM,
+                            backgroundColor: const Color(0xFF161B22),
+                            colorText: Colors.white,
+                          );
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            side: const BorderSide(color: Colors.redAccent, width: 1),
+                          ),
+                        ),
+                        child: const Text('ĐĂNG XUẤT', style: TextStyle(color: Colors.redAccent, fontWeight: FontWeight.bold, fontSize: 13, letterSpacing: 1)),
+                      ),
+                    )
+                  ],
+                );
+              }),
             ),
           )
         ],
@@ -177,43 +213,24 @@ class _ProfileViewState extends State<ProfileView> {
     );
   }
 
-  Widget _buildSpendingCard(String title, String val, IconData icon, Color col) {
-    return Expanded(
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: const Color(0xFF161B22),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: Colors.white.withOpacity(0.03)),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: col, size: 20),
-            const SizedBox(height: 12),
-            Text(title, style: const TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 4),
-            Text(val, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
-          ],
-        ),
-      ),
+  // Stat item builder
+  Widget _buildStatItem(String label, String value) {
+    return Column(
+      children: [
+        Text(label, style: const TextStyle(color: Colors.grey, fontSize: 10, fontWeight: FontWeight.bold)),
+        const SizedBox(height: 6),
+        Text(value, style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold)),
+      ],
     );
   }
 
-  Widget _buildProfileTile(IconData icon, String label, VoidCallback onTap) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      decoration: BoxDecoration(
-        color: const Color(0xFF161B22),
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.white.withOpacity(0.02)),
-      ),
-      child: ListTile(
-        leading: Icon(icon, color: const Color(0xFF00E5FF), size: 20),
-        title: Text(label, style: const TextStyle(color: Colors.white, fontSize: 13, fontWeight: FontWeight.bold)),
-        trailing: const Icon(Icons.arrow_forward_ios, color: Colors.grey, size: 12),
-        onTap: onTap,
-      ),
+  // List tile item builder
+  Widget _buildListTile(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon, color: const Color(0xFF00E5FF), size: 20),
+      title: Text(title, style: const TextStyle(color: Colors.white, fontSize: 13)),
+      trailing: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.grey, size: 14),
+      onTap: onTap,
     );
   }
 }

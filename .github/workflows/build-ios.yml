@@ -30,7 +30,7 @@ jobs:
       - name: Regenerate iOS Config Files
         run: |
           cd lushmkt_app
-          flutter create . --platforms=ios --force
+          flutter create . --platforms=ios
           flutter pub run flutter_launcher_icons:main
 
       - name: Install CocoaPods

@@ -63,17 +63,6 @@ class LushMktApp extends ConsumerWidget {
           bodyColor: Colors.white,
           displayColor: Colors.white,
         ),
-        cardTheme: CardTheme(
-          color: const Color(0xFF161B22).withOpacity(0.8),
-          elevation: 4,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(16),
-            side: BorderSide(
-              color: const Color(0xFF00E5FF).withOpacity(0.15),
-              width: 1,
-            ),
-          ),
-        ),
         inputDecorationTheme: InputDecorationTheme(
           filled: true,
           fillColor: const Color(0xFF161B22),

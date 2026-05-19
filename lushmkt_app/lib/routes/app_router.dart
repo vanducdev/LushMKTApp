@@ -47,7 +47,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: '/otp',
-        builder: (context, state) => const OtpVerificationView(),
+        builder: (context, state) {
+          final extra = state.extra as Map<String, dynamic>?;
+          final email = extra?['email'] as String? ?? 'support@lushmkt.com';
+          final isForgotPassword = extra?['isForgotPassword'] as bool? ?? false;
+          return OtpVerificationView(email: email, isForgotPassword: isForgotPassword);
+        },
       ),
       GoRoute(
         path: '/forgot-password',

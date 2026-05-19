@@ -331,14 +331,15 @@ class OrderHistoryView extends ConsumerWidget {
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
                     ),
                     child: Text('ĐÓNG QUAN SÁT', style: GoogleFonts.orbitron(fontSize: 11, fontWeight: FontWeight.bold)),
-                  )
+                  ),
                 ],
-              );
-            },
-          );
-        },
-      );
-    }
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   // Helpers kiểm định tiến trình
   bool _isStepActive(String status, int step) {

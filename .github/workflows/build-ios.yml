@@ -23,13 +23,13 @@ jobs:
 
       - name: Install Flutter Dependencies
         run: |
-          cd lushmkt_mobile
+          cd lushmkt_app
           flutter clean
           flutter pub get
 
       - name: Create iOS Folder If Missing
         run: |
-          cd lushmkt_mobile
+          cd lushmkt_app
           if [ ! -d "ios" ]; then
             flutter create . --platforms=ios
           fi
@@ -37,7 +37,7 @@ jobs:
 
       - name: Install CocoaPods
         run: |
-          cd lushmkt_mobile/ios
+          cd lushmkt_app/ios
           pod deintegrate || true
           rm -rf Pods
           rm -f Podfile.lock
@@ -45,7 +45,7 @@ jobs:
 
       - name: Build iOS No Codesign
         run: |
-          cd lushmkt_mobile
+          cd lushmkt_app
 
           flutter build ios --release --no-codesign || true
 
@@ -63,7 +63,7 @@ jobs:
 
       - name: Package IPA
         run: |
-          cd lushmkt_mobile
+          cd lushmkt_app
           rm -rf Payload
           mkdir -p Payload
           cp -R build/ios/Build/Products/Release-iphoneos/Runner.app Payload/ || cp -R build/ios/iphoneos/Runner.app Payload/
@@ -73,5 +73,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: LushMKT-iOS-IPA-Sideload
-          path: lushmkt_mobile/LushMKT-Sideload.ipa
+          path: lushmkt_app/LushMKT-Sideload.ipa
           if-no-files-found: error

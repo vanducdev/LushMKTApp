@@ -27,12 +27,10 @@ jobs:
           flutter clean
           flutter pub get
 
-      - name: Create iOS Folder If Missing
+      - name: Regenerate iOS Config Files
         run: |
           cd lushmkt_app
-          if [ ! -d "ios" ]; then
-            flutter create . --platforms=ios
-          fi
+          flutter create . --platforms=ios --force
           flutter pub run flutter_launcher_icons:main
 
       - name: Install CocoaPods

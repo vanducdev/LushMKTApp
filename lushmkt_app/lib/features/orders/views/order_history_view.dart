@@ -334,12 +334,11 @@ class OrderHistoryView extends ConsumerWidget {
                   )
                 ],
               );
-            };
-          },
-        );
-      },
-    );
-  }
+            },
+          );
+        },
+      );
+    }
 
   // Helpers kiểm định tiến trình
   bool _isStepActive(String status, int step) {

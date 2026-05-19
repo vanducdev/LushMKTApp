@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:lushmkt_app/core/theme/lush_design_system.dart';
+import 'package:lushmkt_app/themes/lush_design_system.dart';
 import 'package:lushmkt_app/features/marketplace/providers/marketplace_providers.dart';
 
 class ProductPurchaseView extends ConsumerStatefulWidget {

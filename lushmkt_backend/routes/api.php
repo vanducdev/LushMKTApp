@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\ServiceController;
 use App\Http\Controllers\Api\ProductController;
 use App\Http\Controllers\Api\OrderController;
 use App\Http\Controllers\Api\PaymentController;
+use App\Http\Controllers\Api\SellerController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,12 +23,18 @@ use App\Http\Controllers\Api\PaymentController;
 // Public Authentication Routes
 Route::post('/auth/register', [AuthController::class, 'register']);
 Route::post('/auth/login', [AuthController::class, 'login']);
+Route::post('/auth/refresh', [AuthController::class, 'refresh']);
+Route::post('/auth/send-otp', [AuthController::class, 'sendOtp']);
+Route::post('/auth/verify-otp', [AuthController::class, 'verifyOtp']);
+Route::post('/auth/social-login', [AuthController::class, 'socialLogin']);
+Route::post('/auth/faceid-login', [AuthController::class, 'faceIdLogin']);
 
 // Public Browsing Routes
 Route::get('/home/banners', [ProductController::class, 'getBanners']);
 Route::get('/categories', [ProductController::class, 'getCategories']);
 Route::get('/services', [ServiceController::class, 'index']);
 Route::get('/products', [ProductController::class, 'index']);
+Route::get('/product/{id}', [ProductController::class, 'show']);
 
 // Protected User Routes (Requires Sanctum Token)
 Route::middleware('auth:sanctum')->group(function () {
@@ -44,11 +51,23 @@ Route::middleware('auth:sanctum')->group(function () {
 
     // Payment & Transactions
     Route::post('/deposit/vietqr', [PaymentController::class, 'createVietQR']);
+    Route::post('/deposit/crypto', [PaymentController::class, 'createCryptoDeposit']);
+    Route::post('/deposit/vnpay', [PaymentController::class, 'createVNPayDeposit']);
+    Route::post('/deposit/momo', [PaymentController::class, 'createMomoDeposit']);
+    Route::post('/deposit/simulate/{code}', [PaymentController::class, 'simulatePaymentCallback']);
     Route::get('/transactions', [PaymentController::class, 'transactions']);
 
     // Support Tickets
     Route::post('/tickets', [OrderController::class, 'createTicket']);
     Route::get('/notifications', [AuthController::class, 'getNotifications']);
+
+    // Seller Center Operations (GIAI ĐOẠN 8)
+    Route::get('/seller/analytics', [SellerController::class, 'getAnalytics']);
+    Route::get('/seller/orders', [SellerController::class, 'getOrders']);
+    Route::post('/seller/products', [SellerController::class, 'uploadProduct']);
+    Route::post('/seller/verify', [SellerController::class, 'verifySeller']);
+    Route::get('/seller/status', [SellerController::class, 'getVerificationStatus']);
+    Route::post('/seller/withdraw', [SellerController::class, 'withdrawFunds']);
 });
 
 // Admin-Only Routes

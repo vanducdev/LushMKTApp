@@ -1,0 +1,29 @@
+# IDEs and editors
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+
+# System files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Private env files
+.env
+.env.local
+.env.production
+.env.*.local
+
+# Temporary files
+*.log
+tmp/
+temp/
+build/
+.dart_tool/
+node_modules/
+vendor/

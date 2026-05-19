@@ -1,0 +1,68 @@
+# .github/workflows/build_apps.yml
+name: LushMKT Automated Builder
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
+
+jobs:
+  build:
+    name: Build iOS IPA & Android APK
+    runs-on: macos-latest # Sử dụng máy ảo macOS miễn phí của GitHub để build IPA!
+
+    steps:
+      # 1. Checkout mã nguồn dự án
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      # 2. Cài đặt môi trường Java (Yêu cầu để build Android)
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '17'
+
+      # 3. Cài đặt Flutter SDK ổn định
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      # 4. Tải các gói thư viện phụ thuộc
+      - name: Install Dependencies
+        run: |
+          cd lushmkt_app
+          flutter pub get
+
+      # 5. Biên dịch xuất file Android APK (.apk)
+      - name: Build Android APK
+        run: |
+          cd lushmkt_app
+          flutter build apk --release
+
+      # 6. Biên dịch xuất file iOS IPA (.ipa) không cần ký số cứng (No Code-Sign)
+      # Cho phép biên dịch xuất file thành công mượt mà trên GitHub cloud
+      - name: Build iOS IPA
+        run: |
+          cd lushmkt_app
+          flutter build ipa --release --no-codesign
+
+      # 7. Tải file Android APK lên làm GitHub Artifacts để tải về
+      - name: Upload Android Binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: lushmkt-android-apk
+          path: lushmkt_app/build/app/outputs/flutter-apk/app-release.apk
+
+      # 8. Tải file iOS IPA lên làm GitHub Artifacts để tải về
+      - name: Upload iOS Binary
+        uses: actions/upload-artifact@v3
+        with:
+          name: lushmkt-ios-ipa
+          path: lushmkt_app/build/ios/archive/Runner.xcarchive
